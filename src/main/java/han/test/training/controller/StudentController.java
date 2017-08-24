@@ -53,9 +53,9 @@ public class StudentController {
                 studentDto.setBirthday(date);
                 studentDto.setSex("F");
                 studentDto.setCreateTime(now);
-                studentDto.setCreator("admin");
+                studentDto.setCreator("admin1");
                 studentDto.setIsDel("F");
-                studentDto.setModifier("admin");
+                studentDto.setModifier("admin1");
                 studentDto.setModifyTime(now);
                 studentDto.setStuName("韩贝");
             }else{
