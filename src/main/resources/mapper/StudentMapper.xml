@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="han.test.training.dao.StudentDao">
+  <resultMap id="BaseResultMap" type="han.test.training.dal.entity.Student">
+    <result column="StudentID" property="StudentID" />
+    <result column="Name" property="Name" />
+    <result column="Age" property="Age" />
+    <result column="Sex" property="Sex" />
+    <result column="Birthday" property="Birthday" />
+    <result column="CreateTime" property="CreateTime" />
+    <result column="Creator" property="Creator" />
+    <result column="ModifyTime" property="ModifyTime" />
+    <result column="Modifier" property="Modifier" />
+    <result column="IsDel" property="IsDel" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    StudentID, StuName, Age, Sex, Birthday, CreateTime, Creator, ModifyTime, Modifier, IsDel
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Example_Where_Clause">
+    <trim prefix="where" prefixOverrides="and|or">
+      <if test="StudentID != null and StudentID != ''">
+        and StudentID = #{StudentID}
+      </if>
+      <if test="StuName != null and StuName != ''">
+        and StuName LIKE CONCAT(CONCAT('%', #{StuName}), '%')
+      </if>
+      <if test="Age != null and Age != ''">
+        and Age = #{Age}
+      </if>
+      <if test="Sex != null and Sex != ''">
+        and Sex = #{Sex}
+      </if>
+      <if test="BirthdayStart != null and BirthdayStart != ''" >
+        and Birthday &gt;= #{BirthdayStart}
+      </if>
+      <if test="BirthdayEnd != null and BirthdayEnd != ''" >
+        and Birthday &lt;= #{BirthdayEnd}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="han.test.training.dal.entity.Student">
+    insert into Student(<include refid="Base_Column_List" />)
+    values(#{StudentID},#{StuName},#{Age},#{Sex},#{Birthday},#{CreateTime},#{Creator},#{ModifyTime},#{Modifier},#{IsDel})
+  </insert>
+
+  <!-- 根据id，修改记录-->
+  <update id="update" parameterType="han.test.training.dal.entity.Student">
+    update Student set StuName=#{StuName},Age=#{Age},Sex=#{Sex},Birthday=#{Birthday},CreateTime=#{CreateTime},Creator=#{Creator},ModifyTime=#{ModifyTime},Modifier=#{Modifier},IsDel=#{IsDel} where StudentID=#{StudentID}
+  </update>
+
+  <!-- 删除记录 -->
+  <delete id="delete" parameterType="java.lang.String">
+    delete 	from Student where StudentID = #{studentID}
+  </delete>
+
+
+  <!-- 根据id查询 -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List"/>
+    from Student where StudentID = #{studentID}
+  </select>
+
+  <!-- 根据条件查询单条 -->
+  <select id="querySingle" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List"/>
+    from Student
+    <include refid="Example_Where_Clause"/>
+    limit 0,1
+  </select>
+
+  <!-- 获取总数 -->
+  <select id="queryCount" resultType="java.lang.Integer" parameterType="Object">
+    select count(1) from Student
+    <include refid="Example_Where_Clause"/>
+  </select>
+
+  <!-- 查询列表 -->
+  <select id="queryList" resultMap="BaseResultMap" parameterType="Object">
+    select
+    <include refid="Base_Column_List"/>
+    from Student
+    <include refid="Example_Where_Clause"/>
+  </select>
+
+  <!-- 分页查询列表  offset=pageSize*pageIndex-->
+  <select id="queryPagedList" resultMap="BaseResultMap" parameterType="Object">
+    SELECT <include refid="Base_Column_List"/> FROM Student
+    <include refid="Example_Where_Clause"/> AND StudentID >=
+    (SELECT StudentID FROM Student
+    <include refid="Example_Where_Clause"/>
+    order by #{order} #{orderType} LIMIT #{offset}, 1)
+    order by #{order} #{orderType} LIMIT #{pageSize};
+  </select>
+</mapper>

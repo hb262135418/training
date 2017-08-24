@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Title</title>
+    <script th:src="@{/scripts/jquery-1.7.1.js}"></script>
+</head>
+<body>
+    <p>学生名字：</p><input type="text" id="txtName" value=""/>
+</body>
+</html>
+<script>
+
+    $.ajax({
+        type : "GET",
+        url : "../student/tests",
+        data : {
+            testPara:"qqq"
+        },
+        success : function(jsonString) {
+            alert(jsonString);
+            var json = $.parseJSON(jsonString);
+            alert(json.message);
+            alert(json.student.name);
+            alert(json.student.age);
+            alert(json.student.studentID);
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert(XMLHttpRequest.status);
+            alert(XMLHttpRequest.readyState);
+            alert(textStatus);
+        }
+    });
+</script>
